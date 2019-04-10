@@ -1,6 +1,6 @@
 # Bulk Segregant Analysis.
 
-Our python program will help you find loci under selection with a bulk segregant approach and produce publication-quality figures using a simple command in Terminal. Although the programs were written and tested on sequences from the two-spotted spider mite, Tetranychus urticae, the python program is designed to work for related projects for which data sets and input files are available. We emphasize user-friendliness so do no hesitate to email Andre (a.kurlovs@gmail.com) if you have any questions. Bulk segregant analysis and this program is described in the following publication: 
+Our python program will help you find loci under selection with a bulk segregant approach and produce publication-quality figures using a simple command in Terminal. Although the programs were written and tested on sequences from the two-spotted spider mite, *Tetranychus urticae*, the python program is designed to work for related projects for which data sets and input files are available. We emphasize user-friendliness so do no hesitate to email Andre (a.kurlovs@gmail.com) if you have any questions. Bulk segregant analysis and this program is described in the following publication: 
 - Kurlovs, A. H., R., Snoeck, Kosterlitz, O., Van Leeuwen, T., and Clark, R. M. Some flashy title. Under review (for a preprint, see bioRxiv ########; doi: some_magic_url)
 
 ---
