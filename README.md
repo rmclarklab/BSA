@@ -1,6 +1,8 @@
 # Bulk Segregant Analysis.
 
-Our python program will help you find loci under selection with a bulk segregant approach and produce publication-quality figures using a simple command in Terminal. Although the programs were written and tested on sequences from the two-spotted spider mite, *Tetranychus urticae*, the python program is designed to work for related projects for which data sets and input files are available. We emphasize user-friendliness so do no hesitate to email Andre (a.kurlovs@gmail.com) if you have any questions. Bulk segregant analysis and this program is described in the following publication: 
+[trying the link thing](#unpaired-data)
+
+Our python program will help you find loci under selection with a bulk segregant approach and produce publication-quality figures using a simple command in Terminal. Although the programs were written and tested on sequences from the two-spotted spider mite, *Tetranychus urticae*, the python program is designed to work for related projects for which data sets and input files are available. We emphasize user-friendliness so do no hesitate to email Andre (a.kurlovs@gmail.com) if you have any questions. Bulk segregant analysis and this program is described in the following publication:
 - Kurlovs, A. H., Snoeck, S., Kosterlitz, O., Van Leeuwen, T., and Clark, R. M. Some flashy title. Under review (for a preprint, see bioRxiv ########; doi: some_magic_url)
 
 ---
@@ -56,7 +58,7 @@ Maybe add a section here to talk about the assumptions of the data structure and
 
 ## Special Cases
 
-### Unpaired Data
+### [Unpaired Data]
 
 It often happens that (as used in our example) selected and control offspring are not paired and thus do not represent true replicates (please see Wybouw et. al. 2019 for example). Use `–u` for unpaired data. The order you put in is the order that will be used to pair them for plotting in BSA_average_plot.pdf. The crucial distinction is how permutations are performed. Because data are unpaired, every pairing has to be tested. Therefore, you may want to allow more time to process the permutations in this event, especially if you have many samples. By default, every sample combination will be permuted, which is the factorial for the number of samples. This means 120 in the example above, meaning that `–u –perm 10000` will perform a total of 1,200,000 permutations. 
 With more permutations, this process will get very computationally intensive. Multiprocessing is incorporated into the code, and by default, the program will use all available processing cores on your machine. You can also specify how many cores you want use with the `–n` flag. To further reduce processing time, you can select how many random combinations you want to permute by using the –comb flag. For example, `–u –perm 10000 –n 30 –comb 60` will randomly select 60 selected-control offspring group combinations, and permute each 10k times using 30 processing cores. If you have many replicates (e.g., 10), the number of combinations rises quickly (e.g., 3.5 million). It is highly advised that you choose the number of desired combinations, e.g., `–comb 120`, if you have a large number of replicates.
