@@ -25,7 +25,7 @@ To read more about these options and check all of them, run:
 ```
 /Users/Say_My_Name/My_BSA/bsa_code.py –h
 ```
-The basic command is best suited for a situation in which both of your parental strains are inbred. We recommend that you start with this option even if your parental strains are heterozygous, but the method only considers homozygous loci, which might limit your power. Please scroll down to *Heterozygosity in parental strains* to see options that deal with other scenarios.
+The basic command is best suited for a situation in which both of your parental strains are inbred. We recommend that you start with this option even if your parental strains are heterozygous, but the method only considers homozygous loci, which might limit your power. Please see the [Heterozygosity in parental strains](#heterozygosity-in-parental-strains) section to see options that deal with other scenarios.
 
 You may notice that you can provide single parental strains and at the same time have multiple replicates. However, if you use multiple parental strains, they should also be separated by a comma and come in the same order as their respective offspring. Order matters! 
 
