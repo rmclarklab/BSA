@@ -64,8 +64,8 @@ With more permutations, this process will get very computationally intensive. Mu
 
 We recommend using inbred parental strains and sequencing them in the course of your experiment. However, we realize that this is not always possible. The methods described in this section might remedy your situation. 
 
-## Single inbred parental strain
-If you only have one of the two parental strains sequenced, use the `–pmaj` flag. The alleles coming from the unknown parental strain will be inferred. For instance:
+## One inbred parental strain
+If you only have one of the two parental strains inbred and sequenced, use the `–pmaj` flag. The alleles coming from the unknown parental strain will be inferred. For instance:
 ```
 /Users/Say_My_Name/My_BSA/bsa_code.py \
  -v \/Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
