@@ -70,8 +70,8 @@ If you only have one of the two parental strains sequenced, use the `–pmaj` fl
 /Users/Say_My_Name/My_BSA/bsa_code.py \
  -v \/Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
 -pmaj I_R \
--osel Selected_Offspring_1,Selected_Offspring_2,Selected_Offspring_3,Selected_Offspring_4, Selected_Offspring_5 \
--ocon Control_Offspring_1,Control_Offspring_2,Control_Offspring_3, Control_Offspring_4, Control_Offspring_5 \
+-osel Selected_Offspring_1,Selected_Offspring_2,Selected_Offspring_3,Selected_Offspring_4,Selected_Offspring_5 \
+-ocon Control_Offspring_1,Control_Offspring_2,Control_Offspring_3,Control_Offspring_4,Control_Offspring_5 \
 -o /Users/Say_My_Name/My_BSA/Outfiles
 ```
 This method can also be used if one of your parents is heterozygous. Specify `–pmaj` for the inbred parent.
