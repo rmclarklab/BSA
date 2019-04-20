@@ -131,7 +131,8 @@ If you want to choose your own color scheme, use e.g.,
 
 The package allows users to plot BSA files of their choice and the statistical cutoffs associated with them. This can come in handy when you are analyzing three separate experiments with several replicates, yet want to produce a plot that summarizes all of your findings in the same place. This is accomplished by using `–plot` and `–permplot`. You can list your BSA sliding window files using the former and permutation files using the latter. For instance:
 ```
--plot /Users/Say_My_Name/My_BSA/Outfiles_experiment1/BSA_output/selected_average.txt, /Users/Say_My_Name/My_BSA/Outfiles_experiment2/BSA_output/selected_average.txt,
+-plot /Users/Say_My_Name/My_BSA/Outfiles_experiment1/BSA_output/selected_average.txt,
+/Users/Say_My_Name/My_BSA/Outfiles_experiment2/BSA_output/selected_average.txt,
 /Users/Say_My_Name/My_BSA/Outfiles_experiment3/BSA_output/selected_average.txt
 
 -permplot
