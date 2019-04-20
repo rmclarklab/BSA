@@ -135,7 +135,8 @@ The package allows users to plot BSA files of their choice and the statistical c
 /Users/Say_My_Name/My_BSA/Outfiles_experiment3/BSA_output/selected_average.txt
 
 -permplot
-/Users/Say_My_Name/My_BSA/Outfiles_experiment1/BSA_output/permutations.txt, /Users/Say_My_Name/My_BSA/Outfiles_experiment2/BSA_output/permutations.txt,
+/Users/Say_My_Name/My_BSA/Outfiles_experiment1/BSA_output/permutations.txt,
+/Users/Say_My_Name/My_BSA/Outfiles_experiment2/BSA_output/permutations.txt,
 /Users/Say_My_Name/My_BSA/Outfiles_experiment3/BSA_output/permutations.txt
 
 -o /Users/Say_My_Name/My_BSA/New_outfiles
