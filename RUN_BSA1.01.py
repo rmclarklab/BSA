@@ -471,7 +471,7 @@ def both_fixed(indv):
         return(sample_score)
 
 def inferred(indv):
-    """Process offspring information when no parental information"""
+    """Process offspring information when information only from a single parent"""
     exp_genosplito = set(indv[1].split(":")[0].split("/"))
     if len(exp_genosplito) == 1:
         exp_allele = list(exp_genosplito)[0]
@@ -521,6 +521,11 @@ def process_infer(line, vcfline, cov):
     # now let's parse it for each replicate:
     outdict = {}
     info = line[9:]
+    parents_info = {}
+    for par_strain in set(ARGDICT["major_parent"]):
+        parents_info[par_strain] = {}
+        parents_info[par_strain]["listed"] = []
+        parents_info[par_strain]["passing"] = False
     scores = []
     for sample in zip(ARGDICT["selected_offspring"]+ARGDICT["control_offspring"],
                       ARGDICT["major_parent"]*2):
@@ -529,18 +534,26 @@ def process_infer(line, vcfline, cov):
         if (len([call for call in indv if "." not in call]) == 2 and
                 (cov[sample[0]]*ARGDICT["coverage_under"]
                  <= spt_vcfcov(indv[0]) <= cov[sample[0]]*ARGDICT["coverage_over"]
-                 and cov[sample[1]]*ARGDICT["coverage_under"]
-                 <= spt_vcfcov(indv[1]) <= cov[sample[1]]*ARGDICT["coverage_over"])):
+                    and cov[sample[1]]*ARGDICT["coverage_under"]
+                    <= spt_vcfcov(indv[1]) <= cov[sample[1]]*ARGDICT["coverage_over"])):
                 ########### NOW ONTO THE ACTUAL CALLS
             sample_score = inferred(indv)
             if sample_score is not None:
+                parents_info[sample[1]]["listed"].append(sample_score)
                 scores.append(sample_score)
-    high_scores = [i for i in scores if i >= ARGDICT["mac"]]
-    low_scores = [i for i in scores if i <= 1-ARGDICT["mac"]]
-    if (len(scores) == len(ARGDICT["selected_offspring"]+ARGDICT["control_offspring"]) and
-            len(high_scores) < len(scores) and len(low_scores) < len(scores)):
-        for sample in zip(ARGDICT["selected_offspring"]+ARGDICT["control_offspring"], scores):
-            outdict[sample[0]] = sample[1]
+    for prinf in parents_info:
+        high_scores = [i for i in parents_info[prinf]["listed"] if i >= ARGDICT["mac"]]
+        low_scores = [i for i in parents_info[prinf]["listed"] if i <= 1-ARGDICT["mac"]]
+        if (len(high_scores) < len(parents_info[prinf]["listed"])
+             and len(low_scores) < len(parents_info[prinf]["listed"])
+             and len(parents_info[prinf]["listed"])
+                 == ARGDICT["major_parent"].count(prinf)*2):
+            parents_info[prinf]["passing"] = True
+    if len(scores) == len(ARGDICT["selected_offspring"]+ARGDICT["control_offspring"]):
+        for sample in zip(ARGDICT["selected_offspring"]+ARGDICT["control_offspring"], 
+                          scores, ARGDICT["major_parent"]*2):
+            if parents_info[sample[2]]["passing"]:
+                outdict[sample[0]] = sample[1]
     return(outdict)
 
 def process_samples(line, vcfline, cov):
@@ -1276,17 +1289,17 @@ if ("selected_offspring" in ARGDICT
 
     # finds average genome-wide read coverage for each strain/population in VCF file
     coverage()
-    print("elapsed %s min"%((time.process_time()-START)/60.0))
+    print("elapsed %.2f min"%((time.process_time()-START)/60.0))
     START = time.process_time()
 
     # goes over VCF and outputs allele frequencies to be used in sliding window analysis
     VCFTUPLE = get_vcftuple()
-    print("elapsed %s min"%((time.process_time()-START)/60.0))
+    print("elapsed %.2f min"%((time.process_time()-START)/60.0))
     START = time.process_time()
 
     # this outouts sliding windows
     FINAL_DICT = slider(VCFTUPLE)
-    print("elapsed %s min"%((time.process_time()-START)/60.0))
+    print("elapsed %.2f min"%((time.process_time()-START)/60.0))
     START = time.process_time()
 
     if not os.path.isdir("%s"%ARGDICT["outdir3"]):
@@ -1294,11 +1307,11 @@ if ("selected_offspring" in ARGDICT
 
     NEW_FINAL_DICT = fill_in(FINAL_DICT)
     plotter(NEW_FINAL_DICT)
-    print("elapsed %s min"%((time.process_time()-START)/60.0))
+    print("elapsed %.2f min"%((time.process_time()-START)/60.0))
     START = time.process_time()
     ARGDICT["master_dict"] = NEW_FINAL_DICT
     PERM_RESULTS = permute_setup()
-    print("elapsed %s min"%((time.process_time()-START)/60.0))
+    print("elapsed %.2f min"%((time.process_time()-START)/60.0))
     START = time.process_time()
     AV_UNPERM_DICT = PERM_RESULTS[0]
     UNPERM_DICT = PERM_RESULTS[1]
