@@ -1,5 +1,5 @@
 Important! (May 1, 2019):
-I need to reintroduce the haplodiplpoid option. The -pmaj option infers the other parent based on ALL selected and unselected samples, which is actually not how it should be in paired samples with haplodiploid male parents. This also needs to be incorporated into the absolute value method.
+I need to reintroduce the haplodiplpoid option. The -pmaj option infers the other parent based on ALL selected and unselected samples, which is actually not how it should be in paired samples with haplodiploid male parents. The pair thing also needs to be incorporated into the absolute value method, which is already set up as pair-based.
 
 Our program will help you find loci under selection with a bulked segregant approach and produce publication-quality figures. We emphasize user-friendliness so do not hesitate to email Andre (a.kurlovs@gmail.com) if you have any questions or concerns. This program is described in the following publication:
 - Kurlovs, A. H., Snoeck, S., Kosterlitz, O., Van Leeuwen, T., and Clark, R. M. Some flashy title. Under review (for a preprint, see bioRxiv ########; doi: some_magic_url)
