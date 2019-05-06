@@ -1,6 +1,3 @@
-Important! (May 1, 2019):
-I need to reintroduce the haplodiplpoid option. The -pmaj option infers the other parent based on ALL selected and unselected samples, which is actually not how it should be in paired samples with haplodiploid male parents. The pair thing also needs to be incorporated into the absolute value method, which is already set up as pair-based.
-
 Our program will help you find loci under selection with a bulked segregant approach and produce publication-quality figures. We emphasize user-friendliness so do not hesitate to email Andre (a.kurlovs@gmail.com) if you have any questions or concerns. This program is described in the following publication:
 - Kurlovs, A. H., Snoeck, S., Kosterlitz, O., Van Leeuwen, T., and Clark, R. M. Some flashy title. Under review (for a preprint, see bioRxiv ########; doi: some_magic_url)
 
@@ -67,8 +64,22 @@ With more permutations, this process will get very computationally intensive. Mu
 
 We recommend using inbred parental strains and sequencing them in the course of your experiment. However, we realize that this is not always possible. The methods described in this section might remedy your situation. 
 
+
+## Haplodiploid male parent
+As this method was developed for the two-spotted spider mite, we offer an option in which individual haploid male parents from a heterozygous strain were crossed to a female from an inbred strain. This option assumes that your samples are paired as different males would be used in each cross. It does not matter whether a strain with the trait of interest or a strain without it the haplodiploid one. Use the `–hpd' flag for the haplodiplod male parental strain, e.g.,
+```
+/Users/Say_My_Name/My_BSA/bsa_code.py \
+ -v \/Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
+-psel I_R \
+-pcon I_S \
+-hpd I_R \
+-osel Selected_Offspring_1,Selected_Offspring_2,Selected_Offspring_3,Selected_Offspring_4,Selected_Offspring_5 \
+-ocon Control_Offspring_1,Control_Offspring_2,Control_Offspring_3,Control_Offspring_4,Control_Offspring_5 \
+-o /Users/Say_My_Name/My_BSA/Outfiles
+```
+
 ## One inbred parental strain
-If you only have one of the two parental strains inbred and sequenced, use the `–pmaj` flag. The alleles coming from the unknown parental strain will be inferred. For instance:
+If you only have one of the two parental strains inbred and sequenced, use the `–pmaj` flag. The alleles coming from the unknown parental strain will be inferred. Like the '-hpd' method described above, this one treats your samples as if they are paired. It is also built for the parent with the trait being available -- otherwise, your BSA peak will point downwards.
 ```
 /Users/Say_My_Name/My_BSA/bsa_code.py \
  -v \/Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
@@ -77,10 +88,9 @@ If you only have one of the two parental strains inbred and sequenced, use the `
 -ocon Control_Offspring_1,Control_Offspring_2,Control_Offspring_3,Control_Offspring_4,Control_Offspring_5 \
 -o /Users/Say_My_Name/My_BSA/Outfiles
 ```
-This method can also be used if one of your parents is heterozygous. Specify `–pmaj` for the inbred parent.
 
 ## No genetic information on parental strains
-If you have no parental information, do not specify the parents, and the program will perform BSA based on the absolute allele frequency difference between the selected and the unselected offspring. Important: This method treats unpaired data as is does paired data, i.e., it will force the pairings depending on the order you provide.
+If you have no parental information, do not specify the parents, and the program will perform BSA based on the absolute allele frequency difference between the selected and the unselected offspring. This also treats data as paired, and since it has to combine the pairs for each allele, it makes permutations not possible.
 
 ---
 
@@ -88,7 +98,7 @@ If you have no parental information, do not specify the parents, and the program
 
 ## Troubleshooting
 
-In a sliding window analysis, the minimum number of SNPs that have to be in a window to be considered is by default set as window_size*0.00025. Given that the default window size is 75kb, at last 19 SNPs have to be present in the window for it to be considered. If your parental strains have few SNPs compared to the reference genome, this setting might be too stringent. Use the `–m` flag followed the minimum number of SNPs of your choice to change this parameter. 
+In a sliding window analysis, the minimum number of SNPs that have to be in a window to be considered is by default set as window_size*0.0005. Given that the default window size is 75kb, at last 38 SNPs have to be present in the window for it to be considered. If your parental strains have few SNPs compared to the reference genome, this setting might be too stringent. Use the `–m` flag followed the minimum number of SNPs of your choice to change this parameter. 
 
 ## Masking
 
