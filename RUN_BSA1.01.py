@@ -43,6 +43,8 @@ PARSER.add_argument("-pcon", "--control_parent", required=False,
 PARSER.add_argument("-pmaj", "--major_parent", required=False,
                     help="Known parent when the other's genotype is not known "
                     "if several crosses, insert them in order, commas,no_spaces")
+PARSER.add_argument("-hpd", "--haplodiploid", required=False, default=None,
+                    help="Haplodiploid male parent")
 PARSER.add_argument("-osel", "--selected_offspring", required=False,
                     help="Offspring with trait of interest "
                     "if several crosses, insert them in order, commas,no_spaces")
@@ -147,6 +149,8 @@ if ARGIES.selected_parent:
 if ARGIES.control_parent:
     ARGDICT["control_parent"] = ARGIES.control_parent.split(",")
     ALL_POPS = ALL_POPS | set(ARGDICT["control_parent"])
+if ARGIES.haplodiploid:
+    ARGDICT["haplodiploid"] = ARGIES.haplodiploid
 if ARGIES.major_parent:
     ARGDICT["major_parent"] = ARGIES.major_parent.split(",")
     ALL_POPS = ALL_POPS | set(ARGDICT["major_parent"])
@@ -167,7 +171,7 @@ ARGDICT["slide"] = int(ARGIES.slide)
 if ARGIES.min_allele:
     ARGDICT["min_allele"] = int(ARGIES.min_allele)
 else:
-    ARGDICT["min_allele"] = ARGDICT["window"]*0.00025
+    ARGDICT["min_allele"] = ARGDICT["window"]*0.00050
 ARGDICT["min_scaffold"] = int(ARGIES.min_scaffold)
 ARGDICT["qds"] = float(ARGIES.qds)
 ARGDICT["mps"] = float(ARGIES.mps)
@@ -451,6 +455,71 @@ def round_sig(xxx, sig):
         output = 0
     return(output)
 
+def inferred(indv):
+    """Process offspring information when information only from a single parent"""
+    exp_genosplito = set(indv[1].split(":")[0].split("/"))
+    if len(exp_genosplito) == 1:
+        exp_allele = list(exp_genosplito)[0]
+        #### now let's get the selected
+        sample_ix = list(set([call for call in indv[0].split(":")[0].split("/")
+                              if call == exp_allele]))
+        if sample_ix:
+            sample_ix = int(sample_ix[0])
+            sample_score = float(indv[0].split(":")[1].split(",")
+                                 [sample_ix])/spt_vcfcov(indv[0])
+        else:
+            sample_score = 0.0
+        return(sample_score)
+    else:
+        return(None)
+
+def haplodiploid(indv):
+    """Process offspring information when one of parents is haplodiploid"""
+    exp_genosplito = set(indv[2].split(":")[0].split("/"))
+    cont_genosplito = set(indv[3].split(":")[0].split("/"))
+    if (len(exp_genosplito | cont_genosplito) == 2
+            and exp_genosplito != cont_genosplito
+            and (len(exp_genosplito) == 1
+                 or len(cont_genosplito) == 1)):
+        if len(exp_genosplito) == 1 and len(cont_genosplito) == 1:
+            bothdiff = True
+            exp_allele = list(exp_genosplito)[0]
+            reverse = False
+        else:
+            bothdiff = False
+            if (len(exp_genosplito) == 1
+                    and ARGDICT["haplodiploid"] in ARGDICT["control_parent"]):
+                exp_allele = list(exp_genosplito)[0]
+                reverse = False
+            elif (len(cont_genosplito) == 1
+                  and ARGDICT["haplodiploid"] in ARGDICT["selected_parent"]):
+                exp_allele = list(cont_genosplito)[0]
+                reverse = True
+            else:
+                return(None)
+        #### now let's get the offspring
+        sample_scores = []
+        for ns in range(2):
+            sample_ix = list(set([call for call in indv[ns].split(":")[0].split("/")
+                              if call == exp_allele]))
+            if sample_ix:
+                sample_ix = int(sample_ix[0])
+                sample_score = float(indv[ns].split(":")[1].split(",")
+                                 [sample_ix])/spt_vcfcov(indv[ns])
+            else:
+                sample_score = 0.0
+            if reverse:
+                sample_scores.append(1 - sample_score)
+            else:
+                sample_scores.append(sample_score)
+        high_scores = [i for i in sample_scores if i >= ARGDICT["mac"]]
+        low_scores = [i for i in sample_scores if i <= 1-ARGDICT["mac"]]
+        if (bothdiff or
+                (not bothdiff
+                 and len(high_scores) < 2
+                 and len(low_scores) < 2)):
+            return(sample_scores)
+
 def both_fixed(indv):
     """Process offspring information when both parents fixed"""
     exp_genosplito = set(indv[1].split(":")[0].split("/"))
@@ -470,50 +539,30 @@ def both_fixed(indv):
             sample_score = 0.0
         return(sample_score)
 
-def inferred(indv):
-    """Process offspring information when information only from a single parent"""
-    exp_genosplito = set(indv[1].split(":")[0].split("/"))
-    if len(exp_genosplito) == 1:
-        exp_allele = list(exp_genosplito)[0]
-        #### now let's get the selected
-        sample_ix = list(set([call for call in indv[0].split(":")[0].split("/")
-                              if call == exp_allele]))
-        if sample_ix:
-            sample_ix = int(sample_ix[0])
-            sample_score = float(indv[0].split(":")[1].split(",")
-                                 [sample_ix])/spt_vcfcov(indv[0])
-        else:
-            sample_score = 0.0
-        return(sample_score)
-    else:
-        return(None)
-
 def process_noparents(line, vcfline, cov):
     """Processes each line of a VCF file when parents are not specified"""
     # now let's parse it for each replicate:
     outdict = {}
     info = line[9:]
-    scores = []
-    for sample in (ARGDICT["selected_offspring"]+ARGDICT["control_offspring"]):
-        call = info[vcfline.index(sample)]
-        if ("." not in call and
-                cov[sample]*ARGDICT["coverage_under"] <=
-                spt_vcfcov(call) <= cov[sample]*ARGDICT["coverage_over"]):
+    for sample in zip(ARGDICT["selected_offspring"], ARGDICT["control_offspring"]):
+        scores = []
+        indv = [info[vcfline.index(sample[0])],
+                info[vcfline.index(sample[1])]]
+        if (len([call for call in indv if "." not in call]) == len(indv) and
+                (cov[sample[0]]*ARGDICT["coverage_under"]
+                 <= spt_vcfcov(indv[0]) <= cov[sample[0]]*ARGDICT["coverage_over"]
+                    and cov[sample[1]]*ARGDICT["coverage_under"]
+                    <= spt_vcfcov(indv[1]) <= cov[sample[1]]*ARGDICT["coverage_over"])):
             ########### NOW ONTO THE ACTUAL CALLS
-            sample_score = float(call.split(":")[1].split(",")[0])/spt_vcfcov(call)
-            scores.append(sample_score)
-    high_scores = [i for i in scores if i >= ARGDICT["mac"]]
-    low_scores = [i for i in scores if i <= 1-ARGDICT["mac"]]
-    nsample = len(ARGDICT["selected_offspring"])
-    scores_first = scores[:nsample]
-    scores_second = scores[nsample:]
-    if (len(scores) == len(ARGDICT["selected_offspring"]+ARGDICT["control_offspring"])
-            and len(high_scores) < len(scores)
-            and len(low_scores) < len(scores)):
-        for sample in zip(ARGDICT["selected_offspring"], scores_first, scores_second):
-            outdict[sample[0]] = abs(sample[1] - sample[2])
-        for sample in ARGDICT["control_offspring"]:
-            outdict[sample] = 0
+            for call in indv:
+                sample_score = float(call.split(":")[1].split(",")[0])/spt_vcfcov(call)
+                scores.append(sample_score)
+            high_scores = [i for i in scores if i >= ARGDICT["mac"]]
+            low_scores = [i for i in scores if i <= 1-ARGDICT["mac"]]
+            if (len(high_scores) < len(scores)
+                    and len(low_scores) < len(scores)):
+                outdict[sample[0]] = abs(scores[0] - scores[1])
+                outdict[sample[1]] = 0
     return(outdict)
 
 def process_infer(line, vcfline, cov):
@@ -531,7 +580,7 @@ def process_infer(line, vcfline, cov):
                       ARGDICT["major_parent"]*2):
         indv = [info[vcfline.index(sample[0])],
                 info[vcfline.index(sample[1])]]
-        if (len([call for call in indv if "." not in call]) == 2 and
+        if (len([call for call in indv if "." not in call]) == len(indv) and
                 (cov[sample[0]]*ARGDICT["coverage_under"]
                  <= spt_vcfcov(indv[0]) <= cov[sample[0]]*ARGDICT["coverage_over"]
                     and cov[sample[1]]*ARGDICT["coverage_under"]
@@ -556,6 +605,35 @@ def process_infer(line, vcfline, cov):
                 outdict[sample[0]] = sample[1]
     return(outdict)
 
+def process_hpd(line, vcfline, cov):
+    """Processes each line of a VCF file when parents are not specified"""
+    # now let's parse it for each replicate:
+    outdict = {}
+    info = line[9:]
+    for sample in zip(ARGDICT["selected_offspring"],
+                      ARGDICT["control_offspring"],
+                      ARGDICT["selected_parent"],
+                      ARGDICT["control_parent"]):
+        indv = [info[vcfline.index(sample[0])],
+                info[vcfline.index(sample[1])],
+                info[vcfline.index(sample[2])],
+                info[vcfline.index(sample[3])]]
+        if (len([call for call in indv if "." not in call]) == len(indv) and
+                (cov[sample[0]]*ARGDICT["coverage_under"]
+                 <= spt_vcfcov(indv[0]) <= cov[sample[0]]*ARGDICT["coverage_over"]
+                    and cov[sample[1]]*ARGDICT["coverage_under"]
+                    <= spt_vcfcov(indv[1]) <= cov[sample[1]]*ARGDICT["coverage_over"]
+                    and cov[sample[2]]*ARGDICT["coverage_under"]
+                    <= spt_vcfcov(indv[2]) <= cov[sample[2]]*ARGDICT["coverage_over"]
+                    and cov[sample[3]]*ARGDICT["coverage_under"]
+                    <= spt_vcfcov(indv[3]) <= cov[sample[3]]*ARGDICT["coverage_over"])):
+            ########### NOW ONTO THE ACTUAL CALLS
+            sample_scores = haplodiploid(indv)
+            if sample_scores:
+                outdict[sample[0]] = sample_scores[0]
+                outdict[sample[1]] = sample_scores[1]
+    return(outdict)
+
 def process_samples(line, vcfline, cov):
     """Processes each line of a VCF file"""
     # now let's parse it for each replicate:
@@ -567,7 +645,7 @@ def process_samples(line, vcfline, cov):
         indv = [info[vcfline.index(sample[0])],
                 info[vcfline.index(sample[1])],
                 info[vcfline.index(sample[2])]]
-        if (len([call for call in indv if "." not in call]) == 3 and
+        if (len([call for call in indv if "." not in call]) == len(indv) and
                 (cov[sample[0]]*ARGDICT["coverage_under"]
                  <= spt_vcfcov(indv[0]) <= cov[sample[0]]*ARGDICT["coverage_over"]
                  and cov[sample[1]]*ARGDICT["coverage_under"]
@@ -586,7 +664,10 @@ def line_parser(line):
     line = line.split(";")
     for keyval in line:
         keyval = keyval.split("=")
-        linedict[keyval[0]] = float(keyval[1])
+        try:
+            linedict[keyval[0]] = float(keyval[1])
+        except ValueError:
+            linedict[keyval[0]] = str(keyval[1])
     return(linedict)
 
 def get_vcftuple():
@@ -638,8 +719,12 @@ def get_vcftuple():
                         and quals["ReadPosRankSum"] >= ARGDICT["rprs"]):
                     vcfdict[chrom][current_bin][pos] = {}
                     number_qc_snps += 1
-                    if "selected_parent" and "control_parent" in ARGDICT:
+                    if ("selected_parent" and "control_parent" in ARGDICT
+                            and "haplodiploid" not in ARGDICT):
                         outdict = process_samples(line, vcfline, cov)
+                    elif ("selected_parent" and "control_parent" in ARGDICT
+                            and "haplodiploid" in ARGDICT):
+                        outdict = process_hpd(line, vcfline, cov)
                     elif "major_parent" in ARGDICT:
                         outdict = process_infer(line, vcfline, cov)
                     else:
