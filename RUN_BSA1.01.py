@@ -457,21 +457,25 @@ def round_sig(xxx, sig):
 
 def inferred(indv):
     """Process offspring information when information only from a single parent"""
-    exp_genosplito = set(indv[1].split(":")[0].split("/"))
+    exp_genosplito = set(indv[2].split(":")[0].split("/"))
+    sample_scores = []
     if len(exp_genosplito) == 1:
         exp_allele = list(exp_genosplito)[0]
         #### now let's get the selected
-        sample_ix = list(set([call for call in indv[0].split(":")[0].split("/")
-                              if call == exp_allele]))
-        if sample_ix:
-            sample_ix = int(sample_ix[0])
-            sample_score = float(indv[0].split(":")[1].split(",")
-                                 [sample_ix])/spt_vcfcov(indv[0])
-        else:
-            sample_score = 0.0
-        return(sample_score)
-    else:
-        return(None)
+        for ns in range(2):
+            sample_ix = list(set([call for call in indv[ns].split(":")[0].split("/")
+                                if call == exp_allele]))
+            if sample_ix:
+                sample_ix = int(sample_ix[0])
+                sample_score = float(indv[ns].split(":")[1].split(",")
+                                    [sample_ix])/spt_vcfcov(indv[ns])
+            else:
+                sample_score = 0.0
+            sample_scores.append(sample_score)
+        high_scores = [i for i in sample_scores if i >= ARGDICT["mac"]]
+        low_scores = [i for i in sample_scores if i <= 1-ARGDICT["mac"]]
+        if len(high_scores) < 2 and len(low_scores) < 2:
+            return(sample_scores)
 
 def haplodiploid(indv):
     """Process offspring information when one of parents is haplodiploid"""
@@ -570,39 +574,24 @@ def process_infer(line, vcfline, cov):
     # now let's parse it for each replicate:
     outdict = {}
     info = line[9:]
-    parents_info = {}
-    for par_strain in set(ARGDICT["major_parent"]):
-        parents_info[par_strain] = {}
-        parents_info[par_strain]["listed"] = []
-        parents_info[par_strain]["passing"] = False
-    scores = []
-    for sample in zip(ARGDICT["selected_offspring"]+ARGDICT["control_offspring"],
-                      ARGDICT["major_parent"]*2):
+    for sample in zip(ARGDICT["selected_offspring"],
+                      ARGDICT["control_offspring"],
+                      ARGDICT["major_parent"]):
         indv = [info[vcfline.index(sample[0])],
-                info[vcfline.index(sample[1])]]
+                info[vcfline.index(sample[1])],
+                info[vcfline.index(sample[2])]]
         if (len([call for call in indv if "." not in call]) == len(indv) and
                 (cov[sample[0]]*ARGDICT["coverage_under"]
                  <= spt_vcfcov(indv[0]) <= cov[sample[0]]*ARGDICT["coverage_over"]
                     and cov[sample[1]]*ARGDICT["coverage_under"]
-                    <= spt_vcfcov(indv[1]) <= cov[sample[1]]*ARGDICT["coverage_over"])):
+                    <= spt_vcfcov(indv[1]) <= cov[sample[1]]*ARGDICT["coverage_over"]
+                    and cov[sample[2]]*ARGDICT["coverage_under"]
+                    <= spt_vcfcov(indv[2]) <= cov[sample[2]]*ARGDICT["coverage_over"])):
                 ########### NOW ONTO THE ACTUAL CALLS
-            sample_score = inferred(indv)
-            if sample_score is not None:
-                parents_info[sample[1]]["listed"].append(sample_score)
-                scores.append(sample_score)
-    for prinf in parents_info:
-        high_scores = [i for i in parents_info[prinf]["listed"] if i >= ARGDICT["mac"]]
-        low_scores = [i for i in parents_info[prinf]["listed"] if i <= 1-ARGDICT["mac"]]
-        if (len(high_scores) < len(parents_info[prinf]["listed"])
-             and len(low_scores) < len(parents_info[prinf]["listed"])
-             and len(parents_info[prinf]["listed"])
-                 == ARGDICT["major_parent"].count(prinf)*2):
-            parents_info[prinf]["passing"] = True
-    if len(scores) == len(ARGDICT["selected_offspring"]+ARGDICT["control_offspring"]):
-        for sample in zip(ARGDICT["selected_offspring"]+ARGDICT["control_offspring"], 
-                          scores, ARGDICT["major_parent"]*2):
-            if parents_info[sample[2]]["passing"]:
-                outdict[sample[0]] = sample[1]
+            sample_scores = inferred(indv)
+            if sample_scores:
+                outdict[sample[0]] = sample_scores[0]
+                outdict[sample[1]] = sample_scores[1]
     return(outdict)
 
 def process_hpd(line, vcfline, cov):
@@ -1361,6 +1350,9 @@ if ("selected_offspring" in ARGDICT
     else:
         ALL_GROUPS = [ARGDICT["selected_offspring"], ARGDICT["control_offspring"]]
         LENGTHS = set([len(ARGDICT["selected_offspring"]), len(ARGDICT["control_offspring"])])
+        if ARGDICT["perm"]:
+            error("CANNOT RUN PERMUTATIONS IF PARENTAL DATA UNAVAILABLE")
+            sys.exit()
 
     if len(LENGTHS) != 1:
         if len(LENGTHS) == 2 and 1 in LENGTHS:
