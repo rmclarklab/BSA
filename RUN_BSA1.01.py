@@ -473,8 +473,7 @@ def inferred(indv):
                 sample_score = 0.0
             sample_scores.append(sample_score)
         high_scores = [i for i in sample_scores if i >= ARGDICT["mac"]]
-        low_scores = [i for i in sample_scores if i <= 1-ARGDICT["mac"]]
-        if len(high_scores) < 2 and len(low_scores) < 2:
+        if len(high_scores) < len(sample_scores):
             return(sample_scores)
 
 def haplodiploid(indv):
@@ -512,16 +511,13 @@ def haplodiploid(indv):
                                  [sample_ix])/spt_vcfcov(indv[ns])
             else:
                 sample_score = 0.0
-            if reverse:
-                sample_scores.append(1 - sample_score)
-            else:
-                sample_scores.append(sample_score)
+            sample_scores.append(sample_score)
         high_scores = [i for i in sample_scores if i >= ARGDICT["mac"]]
-        low_scores = [i for i in sample_scores if i <= 1-ARGDICT["mac"]]
         if (bothdiff or
                 (not bothdiff
-                 and len(high_scores) < 2
-                 and len(low_scores) < 2)):
+                 and len(high_scores) < len(sample_scores))):
+            if reverse:
+                sample_scores = [1-i for i in sample_scores]
             return(sample_scores)
 
 def both_fixed(indv):
