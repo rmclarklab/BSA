@@ -984,12 +984,14 @@ def finish_plot(axes, indict, fig, commas):
             if "nvr" in indict[all_spls[0]]:
                 y_min = 0
                 y_max = 1
-                axes.set_ylim(-0.02, 1.02)
             else:
                 y_min = new_extremes[0]
                 y_max = new_extremes[1]
-                axes.set_ylim(y_min, y_max)
             ticks(axes, beg, end, y_min, y_max)
+            if "nvr" not in indict[all_spls[0]]:
+                axes.set_ylim(y_min, y_max)
+            else:
+                axes.set_ylim(-0.02, 1.02)
             axes.set_xlim(beg, end)
             new_plotfile = ARGDICT["outdir3"]+"/%s_%s_%s_%s.pdf"%(
                 plot_file.split("/")[-1].split(".")[0], chrom, beg, end)
@@ -1067,7 +1069,10 @@ def plotter(indict):
         y_max = 1
     ticks(axes, x_min, x_max, y_min, y_max)
     # HOW FAR WILL THE PLOT GO?
-    axes.set_ylim(y_min, y_max)
+    if "nvr" not in indict[all_spls[0]]:
+        axes.set_ylim(y_min, y_max)
+    else:
+        axes.set_ylim(-0.02, 1.02)
     axes.set_xlim(x_min, x_max)
     finish_plot(axes, indict, fig, commas)
 
