@@ -69,7 +69,7 @@ We recommend using inbred parental strains and sequencing them in the course of 
 As this method was developed for the two-spotted spider mite, we offer an option in which individual haploid male parents from a heterozygous strain were crossed to a female from an inbred strain. This option assumes that your samples are paired as different males would be used in each cross. It does not matter whether a strain with the trait of interest or a strain without it the haplodiploid one. Use the `–hpd' flag for the haplodiplod male parental strain, e.g.,
 ```
 /Users/Say_My_Name/My_BSA/bsa_code.py \
- -v \/Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
+ -v /Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
 -psel I_R \
 -pcon I_S \
 -hpd I_R \
@@ -82,7 +82,7 @@ As this method was developed for the two-spotted spider mite, we offer an option
 If you only have one of the two parental strains inbred and sequenced, use the `–pmaj` flag. The alleles coming from the unknown parental strain will be inferred. Like the '-hpd' method described above, this one treats your samples as if they are paired. It is also built for the parent with the trait being available -- otherwise, your BSA peak will point downwards.
 ```
 /Users/Say_My_Name/My_BSA/bsa_code.py \
- -v \/Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
+ -v /Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
 -pmaj I_R \
 -osel Selected_Offspring_1,Selected_Offspring_2,Selected_Offspring_3,Selected_Offspring_4,Selected_Offspring_5 \
 -ocon Control_Offspring_1,Control_Offspring_2,Control_Offspring_3,Control_Offspring_4,Control_Offspring_5 \
