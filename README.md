@@ -28,7 +28,7 @@ python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
 -ocon Control_Offspring_1,Control_Offspring_2,Control_Offspring_3,Control_Offspring_4 \
 -o /Users/Say_My_Name/My_BSA/Outfiles
 ```
-Note that we are including a VCF file modified from the one used in [Snoeck, Kurlovs, et. al. 2019](https://doi.org/10.1016/j.ibmb.2019.04.011), that you can use for trying the command above. To read more about these options and check all of them, run:
+Note that we are including an XZ-archived VCF file modified from the one used in [Snoeck, Kurlovs, et. al. 2019](https://doi.org/10.1016/j.ibmb.2019.04.011), that you can use for trying the command above. To read more about these options and check all of them, run:
 ```
 python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py –h
 ```
