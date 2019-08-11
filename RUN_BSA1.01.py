@@ -10,7 +10,6 @@ import multiprocessing
 import os
 import random
 import subprocess
-import time
 
 from decimal import Decimal
 from itertools import permutations
@@ -748,7 +747,7 @@ def process_segment(vcf_tuple, scaffy, beg):
 
 def slider(vcf_tuple):
     """Performs a sliding window analysis"""
-    print("RUNNING A SLIDING WINDOW ANALY$IS")
+    print("RUNNING SLIDING WINDOW ANALYSIS")
     shader = scale_dict(ARGDICT["outdir1"] + "/chrom_file.txt")[0]
     lennies = length_dict(ARGDICT["outdir1"] + "/chrom_file.txt")
     outdict = {}
@@ -1330,8 +1329,6 @@ def permute_setup():
 
 ################################################################################################
 
-START = time.process_time()
-
 if ("selected_offspring" in ARGDICT
         and "control_offspring" in ARGDICT):
 
@@ -1367,30 +1364,20 @@ if ("selected_offspring" in ARGDICT
 
     # finds average genome-wide read coverage for each strain/population in VCF file
     coverage()
-    print("elapsed %.2f min"%((time.process_time()-START)/60.0))
-    START = time.process_time()
 
     # goes over VCF and outputs allele frequencies to be used in sliding window analysis
     VCFTUPLE = get_vcftuple()
-    print("elapsed %.2f min"%((time.process_time()-START)/60.0))
-    START = time.process_time()
 
     # this outouts sliding windows
     FINAL_DICT = slider(VCFTUPLE)
-    print("elapsed %.2f min"%((time.process_time()-START)/60.0))
-    START = time.process_time()
 
     if not os.path.isdir("%s"%ARGDICT["outdir3"]):
         subprocess.call("mkdir %s"%(ARGDICT["outdir3"]), shell=True)
 
     NEW_FINAL_DICT = fill_in(FINAL_DICT)
     plotter(NEW_FINAL_DICT)
-    print("elapsed %.2f min"%((time.process_time()-START)/60.0))
-    START = time.process_time()
     ARGDICT["master_dict"] = NEW_FINAL_DICT
     PERM_RESULTS = permute_setup()
-    print("elapsed %.2f min"%((time.process_time()-START)/60.0))
-    START = time.process_time()
     AV_UNPERM_DICT = PERM_RESULTS[0]
     UNPERM_DICT = PERM_RESULTS[1]
     if PERM_RESULTS[2]:
