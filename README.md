@@ -24,11 +24,11 @@ python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
 -v /Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
 -psel I_R \
 -pcon I_S \
--osel Selected_Offspring_1,Selected_Offspring_2,Selected_Offspring_3,Selected_Offspring_4,Selected_Offspring_5 \
--ocon Control_Offspring_1,Control_Offspring_2,Control_Offspring_3,Control_Offspring_4,Control_Offspring_5 \
+-osel Selected_Offspring_1,Selected_Offspring_2,Selected_Offspring_3,Selected_Offspring_4 \
+-ocon Control_Offspring_1,Control_Offspring_2,Control_Offspring_3,Control_Offspring_4 \
 -o /Users/Say_My_Name/My_BSA/Outfiles
 ```
-Note that we are including a VCF file modified from the one used in [Snoeck, Kurlovs, et. al. 2019,](https://doi.org/10.1016/j.ibmb.2019.04.011), that you can using for trying the command above. To read more about these options and check all of them, run:
+Note that we are including a VCF file modified from the one used in [Snoeck, Kurlovs, et. al. 2019](https://doi.org/10.1016/j.ibmb.2019.04.011), that you can using for trying the command above. To read more about these options and check all of them, run:
 ```
 /Users/Say_My_Name/My_BSA/bsa_code.py –h
 ```
