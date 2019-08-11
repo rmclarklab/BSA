@@ -20,7 +20,7 @@ After you sequence each sample and get the fastq files containing the sequence r
 ## Usage
 You get your VCF file and you are ready to find your pesticide resistance locus. To run the basic command, use the following template:  
 ```
-python /Users/Say_My_Name/My_BSA/bsa_code.py \
+python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
 -v /Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
 -psel I_R \
 -pcon I_S \
