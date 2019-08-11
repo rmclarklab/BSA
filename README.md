@@ -30,7 +30,7 @@ python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
 ```
 Note that we are including a VCF file modified from the one used in [Snoeck, Kurlovs, et. al. 2019](https://doi.org/10.1016/j.ibmb.2019.04.011), that you can use for trying the command above. To read more about these options and check all of them, run:
 ```
-/Users/Say_My_Name/My_BSA/RUN_BSA1.01.py –h
+python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py –h
 ```
 The basic command is best suited for a situation in which both of your parental strains have been inbred and sequenced. This method only considers homozygous loci, which might limit your power. Please see the [Two inbred parental strains not present](#Two-inbred-parental-strains-not-present) section to see options that deal with other scenarios.
 
