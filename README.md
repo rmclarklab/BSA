@@ -6,7 +6,7 @@ The publication describing this code (Kurlovs AH*, Snoeck S*, Kosterlitz O, Van 
 
 # Requirements
 - Linux-based command line (Terminal). If you have MacOS, you just need to open Terminal. If you have Windows 10, you can run Linux command line as well – [check out this useful article](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/)
-- Make sure [Python](https://www.python.org/downloads/) 2 or 3 is installed
+- Make sure [Python](https://www.python.org/downloads/) 2.7 or 3 is installed
 - Install Python packages [numpy](https://scipy.org/install.html) and [Matplotlib](https://matplotlib.org/users/installing.html)
 
 ---
