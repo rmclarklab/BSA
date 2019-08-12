@@ -1,6 +1,6 @@
 Our program will help you find loci under selection with a bulked segregant approach and produce publication-quality figures. We emphasize user-friendliness so do not hesitate to email Andre Kurlovs (a.kurlovs@gmail.com) if you have any questions or concerns.
 
-The publication describing this code has just (August 9, 2019) been accepted and will be provided after its official release (we are currently waiting for proofs). If you end up finding this work useful and using the code in your publication, please give us some credit by citing the paper.
+The publication describing this code (Kurlovs AH*, Snoeck S*, Kosterlitz, O, Van Leeuwen T, Clark RM. Trait mapping in non-model arthropods by bulked segregant genetic mapping) has been accepted for publication in Current Opinion in Insect Science and will be provided after official release (we are currently waiting for proofs). If you end up finding this work useful and using the code in your publication, please give us some credit by citing the paper.
 
 ---
 
