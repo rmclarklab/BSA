@@ -1,6 +1,6 @@
 Our program will help you find loci under selection with a bulked segregant approach and produce publication-quality figures. We emphasize user-friendliness so do not hesitate to email Andre Kurlovs (a.kurlovs@gmail.com) if you have any questions or concerns. 
 
-This code (in pretty much the same form you see it now) was used in several recent publications such as [Wybouw et al, 2019](https://doi.org/10.1098/rspb.2019.1039) and [Snoeck, Kurlovs, et al, 2019](https://doi.org/10.1016/j.ibmb.2019.04.011). 
+This code was used in [Wybouw et al, 2019](https://doi.org/10.1098/rspb.2019.1039) to successfully find the gene responsible for keto-carotenoid production in spider mites, and to propose candidate genes for resistance to METI-I acaricides in [Snoeck, Kurlovs, et al, 2019](https://doi.org/10.1016/j.ibmb.2019.04.011). 
 
 The publication describing this code (Kurlovs AH*, Snoeck S*, Kosterlitz O, Van Leeuwen T, Clark RM. Trait mapping in non-model arthropods by bulked segregant genetic mapping) has been accepted for publication in Current Opinion in Insect Science and will be provided after official release (we are currently waiting for proofs). If you end up finding this work useful and using the code in your publication, please give us some credit by citing the paper.
 
