@@ -14,7 +14,7 @@ The publication describing this code has just (August 9, 2019) been accepted and
 # Sample Experimental Design and Basic Run
 
 ## Input files and experimental design
-Suppose you are interested in finding the genomic location of insecticide (I) resistance loci. First, you individually cross five insects from a resistant population (I_R) with a sensitive population (I_S), and expand the resulting segregating populations. After several generations, subject a subset of each of the five replicates to the pesticide. The surviving mites become your selected populations (referred to as Selected_Offspring in the example below) while the total populations are the unselected (referred to as Control_Offspring in the example below). You then extract and sequence DNA from each selected and unselected population as well as from both parental strains (I_R and I_S). More information and suggestions on experimental design for BSA studies are available in the publication specified above.
+Suppose you are interested in finding the genomic location of insecticide (I) resistance loci. First, you individually cross four insects from a resistant population (I_R) with a sensitive population (I_S), and expand the resulting segregating populations. After several generations, subject a subset of each of the five replicates to the pesticide. The surviving mites become your selected populations (referred to as Selected_Offspring in the example below) while the total populations are the unselected (referred to as Control_Offspring in the example below). You then extract and sequence DNA from each selected and unselected population as well as from both parental strains (I_R and I_S). More information and suggestions on experimental design for BSA studies are available in the publication specified above.
 After you sequence each sample and get the fastq files containing the sequence reads, you map each sample to the reference genome (recommend BWA; [Burrows-Wheeler Aligner](http://bio-bwa.sourceforge.net/)), and predict variants (recommend using GATK; [Genome Analysis Tool Kit](https://software.broadinstitute.org/gatk/)) to get a variant call format (VCF) file, which will be used as the input file for program.
 
 ## Usage
@@ -28,9 +28,13 @@ python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
 -ocon Control_Offspring_1,Control_Offspring_2,Control_Offspring_3,Control_Offspring_4 \
 -o /Users/Say_My_Name/My_BSA/Outfiles
 ```
-Note that we are including an XZ-archived VCF file modified from the one used in [Snoeck, Kurlovs, et. al. 2019](https://doi.org/10.1016/j.ibmb.2019.04.011), that you can use for trying the command above. To read more about these options and check all of them, run:
+Note that we are including an [XZ](https://tukaani.org/xz/)-archived VCF file modified from the one used in [Snoeck, Kurlovs, et. al. 2019](https://doi.org/10.1016/j.ibmb.2019.04.011), that you can use for trying the command above. To read more about these options and check all of them, run:
 ```
 python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py –h
+```
+To unarchive the VCF file, run
+```
+unxz /Users/Say_My_Name/Variant_Calls/my_stuff.vcf.xz
 ```
 The basic command is best suited for a situation in which both of your parental strains have been inbred and sequenced. This method only considers homozygous loci, which might limit your power. Please see the [Two inbred parental strains not present](#Two-inbred-parental-strains-not-present) section to see options that deal with other scenarios.
 
@@ -41,10 +45,10 @@ This basic run will determine the I_R allele frequency difference between each p
 The basic run will output the following directories (within the major output directory you define as `–o`):
 
 `/BSA_output` will have files from the sliding window analysis and statistics (see below).
+
 `/BSA_plots` will by default have three plots:
 
 `/BSA_plots/BSA_average_plot.pdf` plots a single line that represents the average of all selected-control offspring pairings.
-
 `/BSA_plots/BSA_comb_plot.pdf` plots each selected control pairing individually.
 `/BSA_plots/BSA_sep_plot.pdf` plots each selected and control sample separately in two different colors – one for the selected offspring groups and one for the controls.
 
@@ -69,7 +73,7 @@ We recommend using inbred parental strains and sequencing them in the course of 
 ## Haplodiploid male parent
 As this method was developed for the two-spotted spider mite, we offer an option in which individual haploid male parents from a heterozygous strain were crossed to a female from an inbred strain. This option assumes that your samples are paired as different males would be used in each cross. It does not matter whether a strain with the trait of interest or a strain without it the haplodiploid one. Use the `–hpd' flag for the haplodiplod male parental strain, e.g.,
 ```
-/Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
+python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
 -v /Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
 -psel I_R \
 -pcon I_S \
@@ -82,7 +86,7 @@ As this method was developed for the two-spotted spider mite, we offer an option
 ## One inbred parental strain
 If you only have one of the two parental strains inbred and sequenced, use the `–pmaj` flag. The alleles coming from the unknown parental strain will be inferred. Like the '-hpd' method described above, this one treats your samples as if they are paired. It is also built for the parent with the trait being available -- otherwise, your BSA peak will point downwards.
 ```
-/Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
+python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
 -v /Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
 -pmaj I_R \
 -osel Selected_Offspring_1,Selected_Offspring_2,Selected_Offspring_3,Selected_Offspring_4 \
