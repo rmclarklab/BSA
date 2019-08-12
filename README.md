@@ -1,4 +1,6 @@
-Our program will help you find loci under selection with a bulked segregant approach and produce publication-quality figures. We emphasize user-friendliness so do not hesitate to email Andre Kurlovs (a.kurlovs@gmail.com) if you have any questions or concerns.
+Our program will help you find loci under selection with a bulked segregant approach and produce publication-quality figures. We emphasize user-friendliness so do not hesitate to email Andre Kurlovs (a.kurlovs@gmail.com) if you have any questions or concerns. 
+
+This code (in pretty much the same form you see it now) was used in several recent publications such as [Wybouw et al, 2019](https://doi.org/10.1098/rspb.2019.1039) and [Snoeck, Kurlovs, et al, 2019](https://doi.org/10.1016/j.ibmb.2019.04.011). 
 
 The publication describing this code (Kurlovs AH*, Snoeck S*, Kosterlitz O, Van Leeuwen T, Clark RM. Trait mapping in non-model arthropods by bulked segregant genetic mapping) has been accepted for publication in Current Opinion in Insect Science and will be provided after official release (we are currently waiting for proofs). If you end up finding this work useful and using the code in your publication, please give us some credit by citing the paper.
 
@@ -150,6 +152,7 @@ If you want to choose your own color scheme, use e.g.,
 The package allows users to plot BSA files of their choice and the statistical cutoffs associated with them. This can come in handy when you are analyzing three separate experiments with several replicates, yet want to produce a plot that summarizes all of your findings in the same place. This is accomplished by using `–plot` and `–permplot`. You can list your BSA sliding window files using the former and permutation files using the latter. For instance:
 ```
 python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
+
 -plot /Users/Say_My_Name/My_BSA/Outfiles_experiment1/BSA_output/selected_average.txt,
 /Users/Say_My_Name/My_BSA/Outfiles_experiment2/BSA_output/selected_average.txt,
 /Users/Say_My_Name/My_BSA/Outfiles_experiment3/BSA_output/selected_average.txt
