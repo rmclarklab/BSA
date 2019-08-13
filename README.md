@@ -4,6 +4,8 @@ This code was used in [Wybouw et al, 2019](https://doi.org/10.1098/rspb.2019.103
 
 The publication describing this code (Kurlovs AH*, Snoeck S*, Kosterlitz O, Van Leeuwen T, Clark RM. Trait mapping in non-model arthropods by bulked segregant genetic mapping) has been accepted for publication in Current Opinion in Insect Science and will be provided after official release (we are currently waiting for proofs). If you end up finding this work useful and using the code in your publication, please give us some credit by citing the paper.
 
+The simplest way to download the files is to click on the green box in the upper-right corner and save the files as a ZIP archive.
+
 ---
 
 # Requirements
@@ -20,7 +22,7 @@ Suppose you are interested in finding the genomic location of insecticide (I) re
 After you sequence each sample and get the fastq files containing the sequence reads, you map each sample to the reference genome (recommend BWA; [Burrows-Wheeler Aligner](http://bio-bwa.sourceforge.net/)), and predict variants (recommend using GATK; [Genome Analysis Tool Kit](https://software.broadinstitute.org/gatk/)) to get a variant call format (VCF) file, which will be used as the input file for program.
 
 ## Usage
-You get your VCF file and you are ready to find your pesticide resistance locus. To run the basic command, use the following template:  
+You get your VCF file and you are ready to find your pesticide resistance locus. To run the basic command, use the following template (while changing the paths depending on where your files are located):  
 ```
 python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
 -v /Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
