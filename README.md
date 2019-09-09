@@ -137,11 +137,11 @@ The “step” flags control how far apart the ticks are placed. The `–xstep` 
 Sometimes it may be handy to zoom in on particular parts of the genome. To do so, you can provide a zoom file where each tab-delimited line (see [Masking](#masking) above) specified a region you want to zoom in on. Add `-z /Users/Say_My_Name/My_BSA/zoom_file.txt` to your command. Note that since the default tick placing is 0.1, you should specify another tick spacing pattern if you want this to work well. For example, `–ystep 0 –yticks 10`. We also recommend that you use round numbers in your zoom file to avoid long decimals show up in the labels.
 
 ## Colors
-The default color scheme is “jet”. For Matplotlib color schemes, refer to <https://matplotlib.org/examples/color/colormaps_reference.html>.
+The default color scheme is “jet”. For Matplotlib color schemes, refer to <https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html>.
 
 The program takes schemes by default, but if you specify `–col` custom,
-you can choose your own colors. The github page has a pdf file with all the available color names (which we adapted from this post on Stack Overflow
-<https://stackoverflow.com/questions/22408237/named-colors-in-matplotlib>). Alternatively, you can use hexadecimal color designations.
+you can choose your own colors. Check out this link for the named colors:
+<https://matplotlib.org/3.1.0/gallery/color/named_colors.html>). Alternatively, you can use hexadecimal color designations.
 
 If you want to choose your own color scheme, use e.g.,
 `-col custom,red,blue,royalblue,orange,#00FF00,darkviolet,indianred`
