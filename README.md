@@ -9,11 +9,17 @@ The simplest way to download the files is to click on the green box in the upper
 # Table of Contents
 
 [Requirements](#Reqs)
+
 [Sample Experimental Design and Basic Run](#Sample)
+
 [Statistics - Is it likely selection or drift?](#Stats)
+
 [Two inbred parental strains not present](#Inbred)
+
 [Additional information](#Adds)
+
 [Plotting parameters](#Plot)
+
 [Independent plotting](#Indie)
 
 
