@@ -19,12 +19,12 @@ The simplest way to download the files is to click on the green box in the upper
 
 ## Input files and experimental design
 Suppose you are interested in finding the genomic location of insecticide (I) resistance loci. First, you individually cross four insects from a resistant population (I_R) with a sensitive population (I_S), and expand the resulting segregating populations. After several generations, subject a subset of each of the five replicates to the pesticide. The surviving mites become your selected populations (referred to as Selected_Offspring in the example below) while the total populations are the unselected (referred to as Control_Offspring in the example below). You then extract and sequence DNA from each selected and unselected population as well as from both parental strains (I_R and I_S). More information and suggestions on experimental design for BSA studies are available in the publication specified above.
-After you sequence each sample and get the fastq files containing the sequence reads, you map each sample to the reference genome (recommend BWA; [Burrows-Wheeler Aligner](http://bio-bwa.sourceforge.net/)), and predict variants (recommend using GATK; [Genome Analysis Tool Kit](https://software.broadinstitute.org/gatk/)) to get a variant call format (VCF) file, which will be used as the input file for program. Important: this code was written to process results of GATK 3's UnifiedGenotyper tool, not GATK 4's HaplotypeCaller -- and although we have successfully used it on VCFs by HaplotypeCaller in GATK version 4.0.7.0, we cannot (at this point) vouch for it working with later versions of GATK.
+After you sequence each sample and get the fastq files containing the sequence reads, you map each sample to the reference genome (recommend BWA; [Burrows-Wheeler Aligner](http://bio-bwa.sourceforge.net/)), and predict variants (recommend using GATK; [Genome Analysis Tool Kit](https://software.broadinstitute.org/gatk/)) to get a variant call format (VCF) file, which will be used as the input file for program.
 
 ## Usage
 You get your VCF file and you are ready to find your pesticide resistance locus. To run the basic command, use the following template (while changing the paths depending on where your files are located):  
 ```
-python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
+python /Users/Say_My_Name/My_BSA/RUN_BSA1.02.py \
 -v /Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
 -psel I_R \
 -pcon I_S \
@@ -34,7 +34,7 @@ python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
 ```
 Note that we are including an [XZ](https://tukaani.org/xz/)-archived VCF file modified from the one used in [Snoeck, Kurlovs, et. al. 2019](https://doi.org/10.1016/j.ibmb.2019.04.011), that you can use for trying the command above. To read more about these options and check all of them, run:
 ```
-python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py –h
+python /Users/Say_My_Name/My_BSA/RUN_BSA1.02.py –h
 ```
 To unarchive the VCF file, run
 ```
@@ -77,7 +77,7 @@ We recommend using inbred parental strains and sequencing them in the course of 
 ## Haplodiploid male parent
 As this method was developed for the two-spotted spider mite, we offer an option in which individual haploid male parents from a heterozygous strain were crossed to a female from an inbred strain. This option assumes that your samples are paired as different males would be used in each cross. It does not matter whether a strain with the trait of interest or a strain without it the haplodiploid one. Use the `–hpd' flag for the haplodiplod male parental strain, e.g.,
 ```
-python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
+python /Users/Say_My_Name/My_BSA/RUN_BSA1.02.py \
 -v /Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
 -psel I_R \
 -pcon I_S \
@@ -90,7 +90,7 @@ python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
 ## One inbred parental strain
 If you only have one of the two parental strains inbred and sequenced, use the `–pmaj` flag. The alleles coming from the unknown parental strain will be inferred. Like the '-hpd' method described above, this one treats your samples as if they are paired. It is also built for the parent with the trait being available -- otherwise, your BSA peak will point downwards.
 ```
-python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
+python /Users/Say_My_Name/My_BSA/RUN_BSA1.02.py \
 -v /Users/Say_My_Name/Variant_Calls/my_stuff.vcf \
 -pmaj I_R \
 -osel Selected_Offspring_1,Selected_Offspring_2,Selected_Offspring_3,Selected_Offspring_4 \
@@ -153,7 +153,7 @@ If you want to choose your own color scheme, use e.g.,
 
 The package allows users to plot BSA files of their choice and the statistical cutoffs associated with them. This can come in handy when you are analyzing three separate experiments with several replicates, yet want to produce a plot that summarizes all of your findings in the same place. This is accomplished by using `–plot` and `–permplot`. You can list your BSA sliding window files using the former and permutation files using the latter. For instance:
 ```
-python /Users/Say_My_Name/My_BSA/RUN_BSA1.01.py \
+python /Users/Say_My_Name/My_BSA/RUN_BSA1.02.py \
 
 -plot /Users/Say_My_Name/My_BSA/Outfiles_experiment1/BSA_output/selected_average.txt,
 /Users/Say_My_Name/My_BSA/Outfiles_experiment2/BSA_output/selected_average.txt,
