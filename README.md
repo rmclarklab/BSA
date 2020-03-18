@@ -6,16 +6,27 @@ The publication describing this code (Kurlovs AH*, Snoeck S*, Kosterlitz O, Van 
 
 The simplest way to download the files is to click on the green box in the upper-right corner and save the files as a ZIP archive.
 
+# Table of Contents
+
+[Requirements](#Reqs)
+[Sample Experimental Design and Basic Run](#Sample)
+[Statistics - Is it likely selection or drift?](#Stats)
+[Two inbred parental strains not present](#Inbred)
+[Additional information](#Adds)
+[Plotting parameters](#Plot)
+[Independent plotting](#Indie)
+
+
 ---
 
-# Requirements
+# <a name="Reqs"></a>Requirements
 - Linux-based command line (Terminal). If you have MacOS, you just need to open Terminal. If you have Windows 10, you can run Linux command line as well – [check out this useful article](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/)
 - Make sure [Python](https://www.python.org/downloads/) 2.7 or 3 is installed
 - Install Python packages [numpy](https://scipy.org/install.html) and [Matplotlib](https://matplotlib.org/users/installing.html)
 
 ---
 
-# Sample Experimental Design and Basic Run
+# <a name="Sample"></a>Sample Experimental Design and Basic Run
 
 ## Input files and experimental design
 Suppose you are interested in finding the genomic location of insecticide (I) resistance loci. First, you individually cross four insects from a resistant population (I_R) with a sensitive population (I_S), and expand the resulting segregating populations. After several generations, subject a subset of each of the five replicates to the pesticide. The surviving mites become your selected populations (referred to as Selected_Offspring in the example below) while the total populations are the unselected (referred to as Control_Offspring in the example below). You then extract and sequence DNA from each selected and unselected population as well as from both parental strains (I_R and I_S). More information and suggestions on experimental design for BSA studies are available in the publication specified above.
@@ -58,7 +69,7 @@ The basic run will output the following directories (within the major output dir
 
 ---
 
-# Statistics - Is it likely selection or drift? 
+# <a name="Stats"></a>Statistics - Is it likely selection or drift? 
 
 ## Overview
 Our package performs a simulation (which is a type of permutation that shifts allele frequency data around without changing the order) that determines whether your BSA peaks likely arose due to selection or genetic drift (please see [Wybouw, Kosterlitz, et. al. 2019](https://doi.org/10.1534/genetics.118.301803) for an explanation of this method). We use a false discovery rate (FDR) of 0.05 (default option), but it can also be defined by the user with the –sig flag (e.g., `–sig 0.01` for FDR of 0.01). The simulation relies on the power of replication – the more replicates you have, the better. It works by combining your selected samples with the respective control samples. If you used different parental strains in your BSA, you will need to run the code individually for each set of parents for this to work correctly. If you want to run simulations on your data, add the –perm flag (e.g., `perm –i 10000`) to your command above. This method assumes that your selected and control methods are paired. Refer to the section below ([Treating unpaired data](#treating-unpaired-data)) if otherwise. 
@@ -69,7 +80,7 @@ With more permutations, this process will get very computationally intensive. Mu
 
 ---
 
-# Two inbred parental strains not present
+# <a name="Inbred"></a>Two inbred parental strains not present
 
 We recommend using inbred parental strains and sequencing them in the course of your experiment. However, we realize that this is not always possible. The methods described in this section might remedy your situation. 
 
@@ -103,7 +114,7 @@ If you have no parental information, do not specify the parents, and the program
 
 ---
 
-# Additional information
+# <a name="Adds"></a>Additional information
 
 ## Troubleshooting
 
@@ -119,7 +130,7 @@ chromosome_4	1230000	1256000
 After making the file, you specify its location, e.g., 
 `-mask /Users/Say_My_Name/My_BSA/masking_file.txt`
 
-# Plotting parameters
+# <a name="Plot"></a>Plotting parameters
 
 ## Tick marks and spacing
 When the plot is automatically generated, the program attempts to space the tick marks on the x-axis based on the genome size, while the y-ticks are automatically spaced 0.1 apart. You can change these options. This can come particularly handy when you are zooming in on a specific section of the genome (below). You can customize your plot with the following options (defaults shown below):
@@ -149,7 +160,7 @@ If you want to choose your own color scheme, use e.g.,
 `/BSA_plots/BSA_sep_plot.pdf` will have red for selected and blue for the unselected groups
 `/BSA_plots/BSA_comb_plot.pdf` will use royalblue, orange, #00FF00 (which is hex for lime green), darkviolet, and indianred for your five replicates.
 
-# Independent plotting
+# <a name="Indie"></a>Independent plotting
 
 The package allows users to plot BSA files of their choice and the statistical cutoffs associated with them. This can come in handy when you are analyzing three separate experiments with several replicates, yet want to produce a plot that summarizes all of your findings in the same place. This is accomplished by using `–plot` and `–permplot`. You can list your BSA sliding window files using the former and permutation files using the latter. For instance:
 ```
