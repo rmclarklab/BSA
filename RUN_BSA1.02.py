@@ -1016,7 +1016,6 @@ def plotter(indict):
     x_max = chrom_dict[chroms[-1]]
     y_min = 1
     y_max = 0
-    axes.plot(y=0, color='b', linestyle='-', lw=0.5)
     axes.axhline(y=0, ls="solid", lw=0.5, color="black")
     commas = None
     all_spls = sorted(indict)
